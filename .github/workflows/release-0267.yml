@@ -1,0 +1,25 @@
+name: Publish Threadline 0.26.7
+on:
+  push:
+    branches: [codex/release-0.26.7]
+permissions:
+  contents: write
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Verify signed APK and publish
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -eu
+          for file in Threadline.apk update.json; do
+            curl --fail --silent --show-error -H "Authorization: Bearer $GH_TOKEN" -H 'Accept: application/vnd.github.raw+json' "https://api.github.com/repos/$GITHUB_REPOSITORY/contents/artifacts/v0.26.7/$file?ref=$GITHUB_SHA" > "$file"
+          done
+          echo '7a6e40837653fabe22a75753e577f14af9e744d6b3a7736051463b02b87599ae  Threadline.apk' | sha256sum --check -
+          python -c 'import json,hashlib; u=json.load(open("update.json")); assert u["versionName"]=="0.26.7" and u["versionCode"]==38 and u["sha256"]==hashlib.sha256(open("Threadline.apk","rb").read()).hexdigest()'
+          gh release create v0.26.7 Threadline.apk update.json --repo "$GITHUB_REPOSITORY" --target "$GITHUB_SHA" --title 'Threadline 0.26.7' --notes 'iMessage Send can open an addressed draft in OpenBubbles without a live reply notification. Check the draft and tap Send in OpenBubbles. Version code 38. Original signing certificate. 395 tests, zero failures, three optional skips.'
+          gh release download v0.26.7 --repo "$GITHUB_REPOSITORY" --dir downloaded
+          cmp Threadline.apk downloaded/Threadline.apk
+          cmp update.json downloaded/update.json

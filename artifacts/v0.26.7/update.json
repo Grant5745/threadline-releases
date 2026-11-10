@@ -1,0 +1,7 @@
+{
+  "versionName": "0.26.7",
+  "versionCode": 38,
+  "apkUrl": "https://github.com/Grant5745/threadline-releases/releases/download/v0.26.7/Threadline.apk",
+  "sha256": "7a6e40837653fabe22a75753e577f14af9e744d6b3a7736051463b02b87599ae",
+  "notes": "iMessage drafts can open their addressed OpenBubbles conversation when there is no live reply notification. Check the draft and tap Send in OpenBubbles. Existing notification reply paths remain available. Built from 415e95b90ffa6f66a46c6b29a39b8275bd0a3809 with the original signing certificate. Tests ran 395 cases with zero failures and three optional skips."
+}
